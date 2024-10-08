@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Get started with a premium admin dashboard layout built with Tailwind CSS and Flowbite featuring 21 example pages including charts, kanban board, mailing system, and more.">
+    <meta name="author" content="Themesberg">
+    <meta name="generator" content="Hugo 0.88.1">
+    
+    <title>Tailwind CSS User Settings Page - Flowbite</title>
+    <link rel="stylesheet" href="assets\css\custom.css">
+    
+    <!-- <link rel="canonical" href="https://flowbite.com/application-ui/demo/users/settings/"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://flowbite.com/application-ui/demo/app.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://flowbite.com/application-ui/demo/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://flowbite.com/application-ui/demo/favicon-32x32.png">
+
+
+
+    <!-- Facebook -->
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-141734189-9');
+    </script>
+    
+    
+    <script>
+        
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('v2fLMH8w3xgUEQcl63H9');
+        } else {
+            document.documentElement.classList.remove('v2fLMH8w3xgUEQcl63H9')
+        }
+    </script>
+
+<!-- sdfafdasfasdfasdfsdafasdfasdfasdf -->
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        const fullName = document.getElementById('fullName').value;
+        const dob = document.getElementById('dob').value;
+        const country = document.getElementById('country').value;
+        const city = document.getElementById('city').value;
+        const address = document.getElementById('address').value;
+        const phoneNo = document.getElementById('phoneNo').value;
+        const bio = document.getElementById('bio').value;
+        const agree = document.getElementById('checkbox1').checked;
+    
+        if (!agree) {
+            alert('You must agree to the terms and conditions.');
+            return;
+        }
+    
+        const profileData = {
+            fullName,
+            dob,
+            country,
+            city,
+            address,
+            phoneNo,
+            bio
+        };
+    
+        console.log('Sending profile data:', profileData); // Log data being sent
+    
+        fetch('/profile', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(profileData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+              window.location.href = 'books.html';
+            } else {
+            alert('Error saving profile: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        });
+    </script>
+
+<style>
+    /* Change color of date text in the date picker */
+    input[type="date"]::-webkit-datetime-edit-text,
+    input[type="date"]::-webkit-datetime-edit-month-field,
+    input[type="date"]::-webkit-datetime-edit-day-field,
+    input[type="date"]::-webkit-datetime-edit-year-field {
+      color: #6b7280; /* Change this to your desired color */
+      opacity: 0.7; /* Adjust the opacity as needed */
+    }
+  </style>
+
+<body>
+    <div class="font-[sans-serif]">
+
+
+
+            <div class="mx-auto max-w-6xl shadow-lg p-8 relative bg-white rounded-lg">
+                <h2 id="bottommargin" class="text-xl text-gray-800 font-bold">Create Your Profile</h2>
+                <div class="_Ybd3WwuTVljUT4vEaM3 mngKhi_Rv06PF57lblDI mveJTCIb2WII7J4sY22F _wYiJGbRZyFZeCc8y7Sf _YxZw_O8dWkTljptcO7z SWDELhWFjL8JxEtm91_o _1jTZ8KXRZul60S6czNi hD0sTTDgbxakubcHVW2X">
+                    <div class="Q_jg_EPdNf9eDMn1mLI2 rvdRhGyExrNYTA6euxsF xu6Xcz2CnxX04u4eQAne _Zd6CFkEZSNEHC9TBkyE SQf297smyJVNzzOO3iQL LvH1cgobxEYMRPVAp8WW fxDO_pTRQLZKehDay_Tf">
+                      <img id="profilePicture" class="hD0sTTDgbxakubcHVW2X IxVXJAn2ZWxXpcIHvPnh nRgpYtDXPa8Sk01AYTQr mveJTCIb2WII7J4sY22F tkZo48dB4RhnHSlDXzoe RO6axy6tLw1YpZ9T54F_ _5qVeTKgUlNIvLfYDjop">
+                        <div>
+                            <h3 class="Z3N7I2IDDsoXK6xJ1cSW q1oXbofRCOhVhOSB8tiU IOPhczRgtphv6NdNBDjj __9sbu0yrzdhGIkLWNXl OyABRrnTV_kvHV7dJ0uE">Jese Leos</h3>
+                            <div class="hD0sTTDgbxakubcHVW2X d3C8uAdJKNl1jzfE9ynq _43MO1gcdi2Y0RJW1uHL PeR2JZ9BZHYIH8Ea3F36 XIIs8ZOri3wm8Wnj9N_y">
+                                Software Engineer
+                            </div>
+                            <a href="javascript:void(0);" id="changePictureButton" class="_k0lTW0vvzboctTxDi2R Q_jg_EPdNf9eDMn1mLI2 b9aD6g2qw84oyZNsMO8j _Cj_M6jt2eLjDgkBBNgI c8dCx6gnV43hTOLV6ks5 ezMFUVl744lvw6ht0lFe ijrOHNoSVGATsWYKl4Id y6GKdvUrd7vp_pxsFb57 g40_g3BQzYCOX5eZADgY mveJTCIb2WII7J4sY22F YoPCmQ0E_V5W0GGmSIdm _dylIDxYTN3qgvD4U597 KmgKPWh7pHX4ztLneO0T d8_fVOcgDmbt7UdpfeLK WuKugQzwTT7o1wwBck2R _ZsTMX_gz275093orLWM">
+                              <svg class="fhCwost7CSNRc2WSHLFW ZEPNZzATe5nPnS0shmrF E9GV5sZJIbfO_GEQ_moc _o2IXcpM0qnG3JPReKus" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+                                <path d="M9 13h2v5a1 1 0 11-2 0v-5z"></path>
+                              </svg>
+                              Change picture
+                            </a>
+                            <input type="file" id="fileInput" style="display: none;" />
+                            
+        
+                            <script>
+                              document.getElementById('changePictureButton').addEventListener('click', function() {
+                                  document.getElementById('fileInput').click();
+                              });
+                      
+                              document.getElementById('fileInput').addEventListener('change', function(event) {
+                                  const file = event.target.files[0];
+                                  if (file) {
+                                      const formData = new FormData();
+                                      formData.append('profilePicture', file);
+                      
+                                      fetch('/upload-profile-picture', {
+                                          method: 'POST',
+                                          body: formData
+                                      })
+                                      .then(response => response.json())
+                                      .then(data => {
+                                          if (data.success) {
+                                              document.getElementById('profilePicture').src = data.filePath;
+                                              console.log('Profile picture updated successfully.');
+                                          } else {
+                                              console.error('Error updating profile picture:', data.message);
+                                          }
+                                      })
+                                      .catch(error => {
+                                          console.error('Error:', error);
+                                      });
+                                  }
+                              });
+                          </script>
+
+                        </div>
+                    </div>
+                </div>
+
+                <form id="profileForm" class="mt-8 grid sm:grid-cols-2 gap-6" action="/profile" method="POST">
+                    <div>
+                      <input type="text" id="fullName" name="fullName"  placeholder="Full Name" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]">
+                    </div>
+                    <div>
+                      <input type="text" id="dob" name="dob" placeholder="Date of Birth" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]" onfocus="(this.type='date')" onblur="if(this.value===''){this.type='text'}">
+                    </div>
+                    <div>
+                      <input type="text" id="country" placeholder="Country" name="country" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]">
+                    </div>
+                    <div>
+                      <input type="text" id="city" placeholder="City" name="city" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]">
+                    </div>
+                    <div>
+                      <input type="text" id="address" placeholder="Address" name="address" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]">
+                    </div>
+                    <div>
+                      <input type="text" id="phoneNo" placeholder="Phone No" name="phoneNo" class="w-full rounded-lg py-2.5 px-4 border border-gray-300 text-sm outline-[#007bff]">
+                    </div>
+                    <div>
+                      <textarea id="bio" placeholder="Bio" name="bio" rows="6" class="col-span-full w-full rounded-lg px-4 border border-gray-300 text-sm pt-3 outline-[#007bff]"></textarea>
+                    </div>
+                    <div class="flex items-center col-span-full">
+                      <input id="checkbox1" type="checkbox" class="w-4 h-4 mr-3">
+                      <label for="checkbox1" class="text-sm text-gray-400">I agree to the <a href="javascript:void(0);" class="underline">Terms and Conditions</a> and <a href="javascript:void(0);" class="underline">Privacy Policy</a></label>
+                    </div>
+                    <button type="submit" class="text-white w-max bg-[#007bff] hover:bg-blue-600 rounded-lg text-sm px-6 py-3 mt-4 tracking-wide">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="#fff" class="mr-2 inline" viewBox="0 0 548.244 548.244"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zm395.3 11.3l-112 112c-4.6 4.6-11.5 5.9-17.4 3.5s-9.9-8.3-9.9-14.8l0-64-96 0c-17.7 0-32-14.3-32-32l0-32c0-17.7 14.3-32 32-32l96 0 0-64c0-6.5 3.9-12.3 9.9-14.8s12.9-1.1 17.4 3.5l112 112c6.2 6.2 6.2 16.4 0 22.6z"/></svg>
+                      submit
+                    </button>
+                  </form>
+    
+            </div>
+            
+
+      </div>
+</body>
+<script>
+    // JavaScript to handle placeholder behavior for date input
+    const dobInput = document.getElementById('dob');
+    
+    dobInput.addEventListener('focus', function () {
+      this.type = 'date'; // Change input type to date on focus
+    });
+  
+    dobInput.addEventListener('blur', function () {
+      if (this.value === '') {
+        this.type = 'text'; // Change back to text if the field is empty on blur
+        this.placeholder = 'Date of Birth'; // Reset placeholder
+      }
+    });
+  </script>
+</html>

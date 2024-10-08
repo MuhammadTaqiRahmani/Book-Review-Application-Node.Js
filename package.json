@@ -1,0 +1,36 @@
+{
+  "name": "play-tailwind",
+  "version": "2.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/tailwind.css -w",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uideck/play-tailwind.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "tailwindcss": "^3.3.5"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "msnodesqlv8": "^4.2.1",
+    "mssql": "^11.0.1",
+    "multer": "^1.4.5-lts.1",
+    "tedious": "^19.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/uideck/play-tailwind/issues"
+  },
+  "homepage": "https://github.com/uideck/play-tailwind#readme",
+  "description": ""
+}
