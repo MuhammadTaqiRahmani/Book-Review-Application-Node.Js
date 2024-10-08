@@ -1,13 +1,10 @@
-// // Project: Relay - Book Review Application
-// Developer: Muhammad Taqi Rahmani
-// GitHub: https://github.com/MuhammadTaqiRahmani/User-Authentication-System
-
 // initDb.js
+
 const { Request } = require('tedious');
 const connection = require('./db');
 
 // Function to create the Users table if it doesn't exist
-function createTableIfNotExists() {
+function createTableIfNotExists(callback) {
   const createTableQuery = `
     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users' AND xtype='U')
     CREATE TABLE Users (
@@ -17,18 +14,50 @@ function createTableIfNotExists() {
     )
   `;
 
-  // Wait for the 'connected' event before executing the SQL request
-  connection.on('connected', () => {
-    const request = new Request(createTableQuery, (err) => {
-      if (err) {
-        console.error('Error creating table:', err);
-      } else {
-        console.log('Users table is ready.');
-      }
-    });
-
-    connection.execSql(request);
+  const request = new Request(createTableQuery, (err) => {
+    if (err) {
+      console.error('Error creating Users table:', err);
+      return callback(err);
+    }
+    console.log('Users table is ready.');
+    callback(); // Proceed to create Profiles table
   });
+
+  connection.execSql(request);
 }
 
-module.exports = createTableIfNotExists;
+// Function to create the Profiles table
+function createProfilesTable(callback) {
+  const createTableQuery = `
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Profiles')
+    BEGIN
+      CREATE TABLE Profiles (
+        id INT PRIMARY KEY,
+        fullName NVARCHAR(100),
+        dob DATE,
+        country NVARCHAR(50),
+        city NVARCHAR(50),
+        address NVARCHAR(255),
+        phoneNo NVARCHAR(15),
+        bio NVARCHAR(MAX)
+      );
+    END
+  `;
+
+  const request = new Request(createTableQuery, (err) => {
+    if (err) {
+      console.error('Error creating Profiles table:', err);
+      return callback(err);
+    }
+    console.log('Profiles table checked/created successfully.');
+    callback(); // Done with creating tables
+  });
+
+  connection.execSql(request);
+}
+
+// Export the functions
+module.exports = {
+  createTableIfNotExists,
+  createProfilesTable,
+};

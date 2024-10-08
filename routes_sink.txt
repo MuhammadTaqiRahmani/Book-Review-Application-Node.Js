@@ -1,0 +1,70 @@
+
+router.post('/profile', (req, res) => {
+  const { fullName, dob, country, city, address, phoneNo, bio } = req.body;
+  const userId = req.session.userId;
+
+  if (!userId) {
+    return res.status(400).send({ success: false, message: 'User not signed in.' });
+  }
+
+  // Check if the user already has a profile
+  const checkProfileQuery = `SELECT COUNT(*) AS count FROM Profiles WHERE id = '${userId}'`;
+
+  const checkRequest = new Request(checkProfileQuery, (err) => {
+    if (err) {
+      console.error('Error checking profile existence:', err);
+      return res.status(500).send({ success: false, message: 'Server error. Please try again later.' });
+    }
+  });
+
+  let profileExists = false;
+
+  checkRequest.on('row', columns => {
+    columns.forEach(column => {
+      if (column.metadata.colName === 'count' && column.value > 0) {
+        profileExists = true;
+      }
+    });
+  });
+
+  checkRequest.on('requestCompleted', () => {
+    if (profileExists) {
+      // Update profile
+      const updateProfileQuery = `
+        UPDATE Profiles 
+        SET fullName = '${fullName}', dob = '${dob}', country = '${country}', city = '${city}', 
+            address = '${address}', phoneNo = '${phoneNo}', bio = '${bio}'
+        WHERE id = '${userId}'
+      `;
+      const updateRequest = new Request(updateProfileQuery, (err) => {
+        if (err) {
+          console.error('Error updating profile data:', err);
+          return res.status(500).send({ success: false, message: 'Error updating profile data.' });
+        } else {
+          console.log('Profile updated successfully.');
+          return res.redirect('/books');  // Redirect to /books after profile update
+        }
+      });
+      connection.execSql(updateRequest);
+
+    } else {
+      // Insert profile
+      const insertProfileQuery = `
+        INSERT INTO Profiles (id, fullName, dob, country, city, address, phoneNo, bio)
+        VALUES ('${userId}', '${fullName}', '${dob}', '${country}', '${city}', '${address}', '${phoneNo}', '${bio}')
+      `;
+      const insertRequest = new Request(insertProfileQuery, (err) => {
+        if (err) {
+          console.error('Error inserting profile data:', err);
+          return res.status(500).send({ success: false, message: 'Error saving profile data.' });
+        } else {
+          console.log('Profile saved successfully.');
+          return res.redirect('/books');  // Redirect to /books after profile creation
+        }
+      });
+      connection.execSql(insertRequest);
+    }
+  });
+
+  connection.execSql(checkRequest);
+});
