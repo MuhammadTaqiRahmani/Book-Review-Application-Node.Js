@@ -276,14 +276,9 @@ router.post('/profile', (req, res) => {
   connection.execSql(checkRequest);
 });
 
-
-// router.get('/books', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'books.html'));
-// });
-
 const isbnFilePath = path.join(__dirname, 'isbn.json');
 
-// List of books with their titles and authors from the HTML
+// List of books with their titles and authors
 const books = [
   { title: "Brand Guideline", author: "Joseph" },
   { title: "Create your own business", author: "John" },
@@ -293,6 +288,7 @@ const books = [
   { title: "Heroes in Battle", author: "John" },
   { title: "The success grower", author: "Merlin" },
   { title: "You are my conference", author: "Alex" },
+  { title: "Achieve financial freedom", author: "Vegus" },
   { title: "Nature", author: "Alex" },
   { title: "Science for you", author: "Merlin" },
   { title: "Halloween", author: "John" },
@@ -312,67 +308,83 @@ function generateISBN() {
   return Math.floor(Math.random() * 10000000000000).toString();
 }
 
-// Function to generate or retrieve ISBNs for all books
-function generateOrRetrieveISBNs() {
-  let bookIsbns = [];
+// Function to generate new ISBN data for all books and save to the JSON file
+function generateAndSaveISBNs() {
+  const bookIsbns = books.map(book => ({
+    title: book.title,
+    author: book.author,
+    isbn: generateISBN()
+  }));
 
-  if (fs.existsSync(isbnFilePath)) {
-    // If the file exists, try to read it and parse the ISBNs
-    try {
-      const data = fs.readFileSync(isbnFilePath, 'utf8');
-      const parsedData = JSON.parse(data);
-      if (parsedData && Array.isArray(parsedData.books)) {
-        bookIsbns = parsedData.books;
-      } else {
-        throw new Error('Invalid JSON structure');
-      }
-    } catch (error) {
-      console.error("Error reading or parsing isbn.json:", error.message);
-      // Generate new ISBNs if parsing fails or the structure is invalid
-      bookIsbns = books.map(book => ({
-        title: book.title,
-        author: book.author,
-        isbn: generateISBN()
-      }));
-
-      // Save the valid ISBNs to the file
-      fs.writeFileSync(isbnFilePath, JSON.stringify({ books: bookIsbns }));
-    }
-  } else {
-    // If the file doesn't exist, generate a new ISBN for each book
-    bookIsbns = books.map(book => ({
-      title: book.title,
-      author: book.author,
-      isbn: generateISBN()
-    }));
-
-    // Save the ISBNs to the file
-    fs.writeFileSync(isbnFilePath, JSON.stringify({ books: bookIsbns }));
-  }
+  // Save the generated ISBNs to the file
+  fs.writeFileSync(isbnFilePath, JSON.stringify({ books: bookIsbns }, null, 2));
 
   return bookIsbns;
 }
 
-// Route to serve the books page with ISBNs injected
-router.get('/books', (req, res) => {
-  const bookIsbns = generateOrRetrieveISBNs();
+// Function to load ISBNs from JSON file or regenerate if the file is empty or invalid
+function loadOrGenerateISBNs() {
+  let bookIsbns = [];
 
-  if (!Array.isArray(bookIsbns) || bookIsbns.length === 0) {
-    return res.status(500).send('Error generating or retrieving ISBNs');
+  if (fs.existsSync(isbnFilePath)) {
+    // If the file exists, try to read and parse the ISBNs
+    try {
+      const data = fs.readFileSync(isbnFilePath, 'utf8');
+
+      if (data) {
+        const parsedData = JSON.parse(data);
+        
+        // If the parsed data is valid and contains books, return it
+        if (parsedData && Array.isArray(parsedData.books)) {
+          return parsedData.books;
+        } else {
+          throw new Error('Invalid JSON structure');
+        }
+      } else {
+        // If the file is empty, throw an error to regenerate the data
+        throw new Error('Empty JSON file');
+      }
+    } catch (error) {
+      console.error("Error reading or parsing isbn.json:", error.message);
+      // Generate new ISBNs if reading or parsing fails
+      return generateAndSaveISBNs();
+    }
+  } else {
+    // If the file doesn't exist, generate a new ISBN for each book
+    return generateAndSaveISBNs();
   }
+}
 
-  // Use a basic string replacement to inject ISBNs into the HTML
-  let htmlContent = fs.readFileSync(path.join(__dirname, 'books.html'), 'utf8');
-  
-  // Replace placeholders in the HTML with actual ISBNs for each book
-  bookIsbns.forEach((book, index) => {
-    const placeholder = `<p id="isbn" class="isbn">isbn here</p>`;
-    const isbnHtml = `<p id="isbn" class="isbn">ISBN: ${book.isbn}</p>`;
-    htmlContent = htmlContent.replace(placeholder, isbnHtml);
-  });
+// Route to serve the books page with title, author, and ISBN injected
+router.get('/books', (req, res) => {
+  try {
+    const books = loadOrGenerateISBNs(); // Load or generate ISBNs
 
-  res.send(htmlContent);
+    // Read the HTML file
+    let htmlContent = fs.readFileSync(path.join(__dirname, 'books.html'), 'utf8');
+
+    // Replace placeholders in the HTML with actual book data
+    books.forEach((book) => {
+      // Replace title and author placeholders with <title> ~ <author> format
+      const titleAuthorPlaceholder = `<span id="book-title-author">title ~ author</span>`;
+      const titleAuthorHtml = `<span id="book-title-author">${book.title} ~ ${book.author}</span>`;
+      htmlContent = htmlContent.replace(titleAuthorPlaceholder, titleAuthorHtml);
+
+      // Replace the ISBN placeholder
+      const isbnPlaceholder = `<p id="isbn" class="isbn">isbn here</p>`;
+      const isbnHtml = `<p id="isbn" class="isbn">${book.isbn}</p>`;
+      htmlContent = htmlContent.replace(isbnPlaceholder, isbnHtml);
+    });
+
+    // Send the updated HTML content
+    res.send(htmlContent);
+
+  } catch (error) {
+    console.error("Error handling the books route:", error.message);
+    res.status(500).send('An error occurred while processing the books page.');
+  }
 });
+
 
 
 router.post('/upload-profile-picture', upload.single('profilePicture'), (req, res) => {
