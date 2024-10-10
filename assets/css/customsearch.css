@@ -20,3 +20,20 @@
 .isbn{
     color: rgb(55 88 249 / var(--tw-bg-opacity));
 }
+
+.fa-regular{
+    font-size: 30px;
+    margin-top: 5px;
+    top: 10;
+    color: rgb(55 88 249 / var(--tw-bg-opacity));
+    cursor: pointer;
+}
+.fa-solid{
+    font-size: 30px;
+    margin-top: 5px;
+    color: rgb(55 88 249 / var(--tw-bg-opacity));
+    cursor: pointer;
+}
+
+
+
