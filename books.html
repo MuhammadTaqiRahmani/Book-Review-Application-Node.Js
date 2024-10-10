@@ -127,7 +127,7 @@
                       href="blog-grids.html"
                       class="ud-menu-scroll mx-8 flex py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
                     >
-                      Blog
+                      Post
                     </a>
                   </li>
                   <li class="submenu-item group relative">
@@ -135,7 +135,7 @@
                       href="javascript:void(0)"
                       class="relative mx-8 flex items-center justify-between py-2 text-base font-medium text-dark group-hover:text-primary dark:text-white lg:ml-8 lg:mr-0 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
                     >
-                      Pages
+                      Search
 
                       <svg
                         class="ml-2 fill-current"
@@ -156,16 +156,12 @@
                       class="submenu relative left-0 top-full hidden w-[250px] rounded-sm bg-white p-4 transition-[top] duration-300 group-hover:opacity-100 dark:bg-dark-2 lg:invisible lg:absolute lg:top-[110%] lg:block lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full"
                     >
                     <div class="input-group">
-                      <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                      <input type="text" id="searchInput" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                       <div class="input-group-append">
-
+                        <button id="searchButton" class="btn btn-primary" type="button" onclick="searchBooks()">Search</button>
                       </div>
-                   </div>
-
-                          <!-- <button class="btn btn-primary" type="button">
-                              <i class="fas fa-search fa-sm"></i>
-                          </button> -->
-
+                    </div>
+                    
                      
 
                     </div>
@@ -295,8 +291,11 @@
               </div>
             </div>
           </div>
+          <div id="booksContainer">
+            <!-- All the books will be displayed here dynamically -->
+
           <div class="-mx-4 flex flex-wrap">
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+            <div  data-book-id="1" class="w-full px-4 md:w-1/2 lg:w-1/3">
               <div class="wow fadeInUp group mb-10" data-wow-delay=".1s" style="visibility: visible; animation-delay: 0.1s;">
                 <div class="mb-8 overflow-hidden rounded-[5px]">
                   <a href="blog-details.html" class="block">
@@ -320,7 +319,7 @@
                 </div>
               </div>
             </div>
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+            <div data-book-id="2" class="w-full px-4 md:w-1/2 lg:w-1/3">
               <div class="wow fadeInUp group mb-10" data-wow-delay=".15s" style="visibility: visible; animation-delay: 0.15s;">
                 <div class="mb-8 overflow-hidden rounded-[5px]">
                   <a href="blog-details.html" class="block">
@@ -344,7 +343,7 @@
                 </div>
               </div>
             </div>
-            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+            <div data-book-id="3" class="w-full px-4 md:w-1/2 lg:w-1/3">
               <div class="wow fadeInUp group mb-10" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s;">
                 <div class="mb-8 overflow-hidden rounded-[5px]">
                   <a href="blog-details.html" class="block">
@@ -813,6 +812,7 @@
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1532,14 +1532,72 @@
         },
       });
     </script>
-    <script>
-      // Fetch the ISBN from the server
-      fetch('/api/isbn')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('isbn').innerText = `ISBN: ${data.isbn}`;
-        })
-        .catch(error => console.error('Error fetching ISBN:', error));
-    </script
+
+    
+    
   </body>
 </html>
+
+
+<script>
+  // Function to search for books
+  function searchBooks() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    // Send search query to backend to fetch the filtered books
+    fetch(`/search?query=${encodeURIComponent(query)}`)
+      .then(response => response.json()) // Parse response as JSON
+      .then(books => {
+        const booksContainer = document.getElementById('booksContainer');
+
+        // Clear the books container before displaying new results
+        booksContainer.innerHTML = '';
+
+        // Check if any results were found
+        if (books.length === 0) {
+          booksContainer.innerHTML = '<p>No books found.</p>';
+          return;
+        }
+
+        // Loop through the books and display them
+        books.forEach(book => {
+          const bookEntry = document.createElement('div');
+          bookEntry.classList.add('book-entry'); // Ensure this class exists for book styling
+
+          // Create the book content with dynamic data
+          bookEntry.innerHTML = `
+          <div class="-mx-4 flex flex-wrap">
+            <div  data-book-id="1" class="w-full px-4 md:w-1/2 lg:w-1/3">
+              <div class="wow fadeInUp group mb-10" data-wow-delay=".1s" style="visibility: visible; animation-delay: 0.1s;">
+                <div class="mb-8 overflow-hidden rounded-[5px]">
+                  <a href="blog-details.html" class="block">
+                    <img src="https://img.freepik.com/free-vector/flat-design-brand-manual-brochure_23-2149896309.jpg?t=st=1728385600~exp=1728389200~hmac=febde2f1169654d4a66d52123ea7536bb59af9b3ae10633f7d2bf758998ff36a&w=826" alt="image" class="w-full transition group-hover:rotate-6 group-hover:scale-125">
+                  </a>
+                </div>
+                <div>
+                  <span class="mb-6 inline-block rounded-[5px] bg-primary px-4 py-0.5 text-center text-xs font-medium leading-loose text-white">
+                    Dec 22, 2023
+                  </span>
+                  <h3>
+                    <a href="javascript:void(0)" class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl">
+                      <span>${book.title} ~ ${book.author}</span>
+                    </a>
+                  </h3>
+                  <p>${book.isbn}</p>
+                  <p class="max-w-[370px] text-base text-body-color dark:text-dark-6">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          `;
+
+          // Append each book to the container
+          booksContainer.appendChild(bookEntry);
+        });
+      })
+      .catch(error => console.error('Error fetching search results:', error));
+  }
+</script>

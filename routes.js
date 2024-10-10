@@ -387,6 +387,24 @@ router.get('/books', (req, res) => {
 
 
 
+router.get('/search', (req, res) => {
+  const query = req.query.query.toLowerCase().trim();
+
+  // Load ISBNs from the JSON file
+  const books = loadOrGenerateISBNs();
+
+  // Filter books based on the query (title, author, or ISBN)
+  const results = books.filter(book => 
+    book.title.toLowerCase().includes(query) ||
+    book.author.toLowerCase().includes(query) ||
+    book.isbn.includes(query)
+  );
+
+  // Respond with filtered results
+  res.json(results);
+});
+
+
 router.post('/upload-profile-picture', upload.single('profilePicture'), (req, res) => {
   if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded.' });

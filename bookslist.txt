@@ -474,3 +474,84 @@
                   </div>
                 </div>
               </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <script>
+  // Function to search for books
+  function searchBooks() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    // Send search query to backend to fetch the filtered books
+    fetch(`/search?query=${encodeURIComponent(query)}`)
+      .then(response => response.json()) // Parse response as JSON
+      .then(books => {
+        const booksContainer = document.getElementById('booksContainer');
+
+        // Clear the books container before displaying new results
+        booksContainer.innerHTML = '';
+
+        // Check if any results were found
+        if (books.length === 0) {
+          booksContainer.innerHTML = '<p>No books found.</p>';
+          return;
+        }
+
+        // Loop through the books and display them
+        books.forEach(book => {
+          const bookEntry = document.createElement('div');
+          bookEntry.classList.add('book-entry'); // Ensure this class exists for book styling
+
+          // Create the book content with dynamic data
+          bookEntry.innerHTML = `
+            <div>
+              <h3>${book.title} ~ ${book.author}</h3>
+              <p>${book.isbn}</p>
+            </div>
+          `;
+
+          // Append each book to the container
+          booksContainer.appendChild(bookEntry);
+        });
+      })
+      .catch(error => console.error('Error fetching search results:', error));
+  }
+</script>
