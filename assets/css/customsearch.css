@@ -1,0 +1,22 @@
+/* Styling for the search bar inside the submenu */
+.submenu .input-group input {
+    padding: 10px;
+    border: 1px solid #ddd; /* Initial border color */
+    border-radius: 8px;
+    background-color: #f9f9f9; /* Light background color */
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;  /* Remove default black outline */
+    box-shadow: none; /* Remove any shadow effect */
+}
+
+/* Optional: Custom focus styling */
+.submenu .input-group input:focus {
+    border-color: #ccc; /* Optional: Change border color on focus */
+    outline: none; /* Ensure the outline is removed */
+    box-shadow: none; /* Ensure no shadow is applied */
+}
+
+.isbn{
+    color: rgb(55 88 249 / var(--tw-bg-opacity));
+}

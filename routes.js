@@ -277,10 +277,48 @@ router.post('/profile', (req, res) => {
 });
 
 
+// router.get('/books', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'books.html'));
+// });
+
+
+const isbnFilePath = path.join(__dirname, 'isbn.json');
+
+// Function to generate a random ISBN
+function generateISBN() {
+  // Example: Generating a simple random 13-digit number as an ISBN
+  return Math.floor(Math.random() * 10000000000000).toString();
+}
+
+// Route to serve the books page
 router.get('/books', (req, res) => {
+  let isbn;
+
+  // Check if ISBN is already saved
+  if (fs.existsSync(isbnFilePath)) {
+    const data = fs.readFileSync(isbnFilePath);
+    isbn = JSON.parse(data).isbn;
+  } else {
+    // Generate new ISBN and save it
+    isbn = generateISBN();
+    fs.writeFileSync(isbnFilePath, JSON.stringify({ isbn }));
+  }
+
+  // Send the HTML file with the ISBN injected
   res.sendFile(path.join(__dirname, 'books.html'));
 });
 
+// Route to get the ISBN via API (optional, if you want to fetch it via AJAX)
+router.get('/api/isbn', (req, res) => {
+  if (fs.existsSync(isbnFilePath)) {
+    const data = fs.readFileSync(isbnFilePath);
+    res.json(JSON.parse(data));
+  } else {
+    const isbn = generateISBN();
+    fs.writeFileSync(isbnFilePath, JSON.stringify({ isbn }));
+    res.json({ isbn });
+  }
+});
 
 router.post('/upload-profile-picture', upload.single('profilePicture'), (req, res) => {
   if (!req.file) {
