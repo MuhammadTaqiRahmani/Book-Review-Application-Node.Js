@@ -281,44 +281,99 @@ router.post('/profile', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'books.html'));
 // });
 
-
 const isbnFilePath = path.join(__dirname, 'isbn.json');
+
+// List of books with their titles and authors from the HTML
+const books = [
+  { title: "Brand Guideline", author: "Joseph" },
+  { title: "Create your own business", author: "John" },
+  { title: "Create your own business", author: "Alex" },
+  { title: "Tribute to the fallen", author: "Vegus" },
+  { title: "Mathematics", author: "Merlin" },
+  { title: "Heroes in Battle", author: "John" },
+  { title: "The success grower", author: "Merlin" },
+  { title: "You are my conference", author: "Alex" },
+  { title: "Nature", author: "Alex" },
+  { title: "Science for you", author: "Merlin" },
+  { title: "Halloween", author: "John" },
+  { title: "National day of Science", author: "Howard" },
+  { title: "Halloween Warrior", author: "Mike" },
+  { title: "Simplifying the Science", author: "Merlin" },
+  { title: "Saluting our heroes", author: "John" },
+  { title: "Eternal Soldiers", author: "John" },
+  { title: "Meta Human", author: "Alex" },
+  { title: "Cursed residence", author: "John" },
+  { title: "Spookie night", author: "John" },
+  { title: "New Technology", author: "Joseph" }
+];
 
 // Function to generate a random ISBN
 function generateISBN() {
-  // Example: Generating a simple random 13-digit number as an ISBN
   return Math.floor(Math.random() * 10000000000000).toString();
 }
 
-// Route to serve the books page
+// Function to generate or retrieve ISBNs for all books
+function generateOrRetrieveISBNs() {
+  let bookIsbns = [];
+
+  if (fs.existsSync(isbnFilePath)) {
+    // If the file exists, try to read it and parse the ISBNs
+    try {
+      const data = fs.readFileSync(isbnFilePath, 'utf8');
+      const parsedData = JSON.parse(data);
+      if (parsedData && Array.isArray(parsedData.books)) {
+        bookIsbns = parsedData.books;
+      } else {
+        throw new Error('Invalid JSON structure');
+      }
+    } catch (error) {
+      console.error("Error reading or parsing isbn.json:", error.message);
+      // Generate new ISBNs if parsing fails or the structure is invalid
+      bookIsbns = books.map(book => ({
+        title: book.title,
+        author: book.author,
+        isbn: generateISBN()
+      }));
+
+      // Save the valid ISBNs to the file
+      fs.writeFileSync(isbnFilePath, JSON.stringify({ books: bookIsbns }));
+    }
+  } else {
+    // If the file doesn't exist, generate a new ISBN for each book
+    bookIsbns = books.map(book => ({
+      title: book.title,
+      author: book.author,
+      isbn: generateISBN()
+    }));
+
+    // Save the ISBNs to the file
+    fs.writeFileSync(isbnFilePath, JSON.stringify({ books: bookIsbns }));
+  }
+
+  return bookIsbns;
+}
+
+// Route to serve the books page with ISBNs injected
 router.get('/books', (req, res) => {
-  let isbn;
+  const bookIsbns = generateOrRetrieveISBNs();
 
-  // Check if ISBN is already saved
-  if (fs.existsSync(isbnFilePath)) {
-    const data = fs.readFileSync(isbnFilePath);
-    isbn = JSON.parse(data).isbn;
-  } else {
-    // Generate new ISBN and save it
-    isbn = generateISBN();
-    fs.writeFileSync(isbnFilePath, JSON.stringify({ isbn }));
+  if (!Array.isArray(bookIsbns) || bookIsbns.length === 0) {
+    return res.status(500).send('Error generating or retrieving ISBNs');
   }
 
-  // Send the HTML file with the ISBN injected
-  res.sendFile(path.join(__dirname, 'books.html'));
+  // Use a basic string replacement to inject ISBNs into the HTML
+  let htmlContent = fs.readFileSync(path.join(__dirname, 'books.html'), 'utf8');
+  
+  // Replace placeholders in the HTML with actual ISBNs for each book
+  bookIsbns.forEach((book, index) => {
+    const placeholder = `<p id="isbn" class="isbn">isbn here</p>`;
+    const isbnHtml = `<p id="isbn" class="isbn">ISBN: ${book.isbn}</p>`;
+    htmlContent = htmlContent.replace(placeholder, isbnHtml);
+  });
+
+  res.send(htmlContent);
 });
 
-// Route to get the ISBN via API (optional, if you want to fetch it via AJAX)
-router.get('/api/isbn', (req, res) => {
-  if (fs.existsSync(isbnFilePath)) {
-    const data = fs.readFileSync(isbnFilePath);
-    res.json(JSON.parse(data));
-  } else {
-    const isbn = generateISBN();
-    fs.writeFileSync(isbnFilePath, JSON.stringify({ isbn }));
-    res.json({ isbn });
-  }
-});
 
 router.post('/upload-profile-picture', upload.single('profilePicture'), (req, res) => {
   if (!req.file) {

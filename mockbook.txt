@@ -1,0 +1,51 @@
+                <div>
+                  <span class="mb-6 inline-block rounded-[5px] bg-primary px-4 py-0.5 text-center text-xs font-medium leading-loose text-white">
+                    Dec 22, 2023
+                  </span>
+                  <h3>
+                    <a href="javascript:void(0)" class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl">
+                      Brand Guideline ~ Joseph
+                    </a>
+                  </h3>
+                  <p id="isbn" class="isbn">isbn here</p>
+                  <p class="max-w-[370px] text-base text-body-color dark:text-dark-6">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry.
+                  </p>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+          <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+              <div class="wow fadeInUp group mb-10" data-wow-delay=".1s" style="visibility: visible; animation-delay: 0.1s;">
+                <div class="mb-8 overflow-hidden rounded-[5px]">
+                  <a href="blog-details.html" class="block">
+                    <img src="https://img.freepik.com/free-vector/flat-design-brand-manual-brochure_23-2149896309.jpg?t=st=1728385600~exp=1728389200~hmac=febde2f1169654d4a66d52123ea7536bb59af9b3ae10633f7d2bf758998ff36a&w=826" alt="image" class="w-full transition group-hover:rotate-6 group-hover:scale-125">
+                  </a>
+                </div>
+                <div>
+                  <span class="mb-6 inline-block rounded-[5px] bg-primary px-4 py-0.5 text-center text-xs font-medium leading-loose text-white">
+                    Dec 22, 2023
+                  </span>
+                  <h3>
+                    <a href="javascript:void(0)" class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl">
+                      Brand Guideline ~ Joseph
+                    </a>
+                  </h3>
+                  <p id="isbn" class="isbn">isbn here</p>
+                  <p class="max-w-[370px] text-base text-body-color dark:text-dark-6">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry.
+                  </p>
+                </div>
+              </div>
+            </div>
