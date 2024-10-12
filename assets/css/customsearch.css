@@ -35,5 +35,12 @@
     cursor: pointer;
 }
 
-
+#searchButton{
+    padding-right: 37%;
+    padding-left: 37%;
+    background-color: rgb(55 88 249 / var(--tw-bg-opacity));
+    border-radius: 5px;
+    margin-top: 5px;
+    color: white;
+}
 
