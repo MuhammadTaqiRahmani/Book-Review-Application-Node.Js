@@ -280,28 +280,29 @@ const isbnFilePath = path.join(__dirname, 'isbn.json');
 
 // List of books with their titles and authors
 const books = [
-  { title: "Brand Guideline", author: "Joseph" },
-  { title: "Create your own business", author: "John" },
-  { title: "Create your own business", author: "Alex" },
-  { title: "Tribute to the fallen", author: "Vegus" },
-  { title: "Mathematics", author: "Merlin" },
-  { title: "Heroes in Battle", author: "John" },
-  { title: "The success grower", author: "Merlin" },
-  { title: "You are my conference", author: "Alex" },
-  { title: "Achieve financial freedom", author: "Vegus" },
-  { title: "Nature", author: "Alex" },
-  { title: "Science for you", author: "Merlin" },
-  { title: "Halloween", author: "John" },
-  { title: "National day of Science", author: "Howard" },
-  { title: "Halloween Warrior", author: "Mike" },
-  { title: "Simplifying the Science", author: "Merlin" },
-  { title: "Saluting our heroes", author: "John" },
-  { title: "Eternal Soldiers", author: "John" },
-  { title: "Meta Human", author: "Alex" },
-  { title: "Cursed residence", author: "John" },
-  { title: "Spookie night", author: "John" },
-  { title: "New Technology", author: "Joseph" }
+  { title: "Brand Guideline", author: "Joseph", isbn: "ISBN-001",date: "19 Dec, 2023", imagePath: "https://img.freepik.com/free-vector/flat-design-brand-manual-brochure_23-2149896309.jpg?t=st=1728385600~exp=1728389200~hmac=febde2f1169654d4a66d52123ea7536bb59af9b3ae10633f7d2bf758998ff36a&w=826" },
+  { title: "Create your own business", author: "John", isbn: "ISBN-002",date: "12 Nov, 2023", imagePath: "https://img.freepik.com/free-vector/business-book-cover-template_23-2148716902.jpg" },
+  { title: "Create your own business", author: "Alex", isbn: "ISBN-003",date: "20 Feb, 2024", imagePath: "https://img.freepik.com/free-vector/minimalist-book-cover-template_23-2148899519.jpg?t=st=1728385650~exp=1728389250~hmac=22684355349b00cf8e76a05989a3796eda64571b2f2073729088a6f53d6558a8&w=826" },
+  { title: "Tribute to the fallen", author: "Vegus", isbn: "ISBN-004",date: "04 Jan, 2023", imagePath: "https://img.freepik.com/free-psd/memorial-day-flyer-template-concept_23-2148559526.jpg?t=st=1728386106~exp=1728389706~hmac=30a0d62f05a7deb9ead24b52131efce3baceeba1a93980c8f61a6e1eabed4c61&w=826" },
+  { title: "Mathematics", author: "Merlin", isbn: "ISBN-005",date: "20 Dec, 2023", imagePath: "https://img.freepik.com/premium-photo/book-with-word-math-written-it_1032785-22604.jpg?w=826" },
+  { title: "Heroes in Battle", author: "John", isbn: "ISBN-006",date: "02 Mar, 2024", imagePath: "https://img.freepik.com/free-vector/movie-poster-template-design_742173-20510.jpg?t=st=1728386187~exp=1728389787~hmac=b51c45c9663c1cbcaf2b98447918f3974aa9614174098f33bfe38a7f93bc0322&w=826" },
+  { title: "The success grower", author: "Merlin", isbn: "ISBN-007",date: "19 Dec, 2023", imagePath: "https://img.freepik.com/premium-vector/creative-annual-book-cover-design-template-your-business_691378-275.jpg?w=826" },
+  { title: "You are my conference", author: "Alex", isbn: "ISBN-008",date: "12 Apr, 2023", imagePath: "https://img.freepik.com/free-vector/gradient-church-flyer-with-photo_23-2148963574.jpg?t=st=1728396629~exp=1728400229~hmac=56933e6f039a765459b86b4b65eb130baf4a4c362a69504a49d9e9f87e1cd029&w=826" },
+  { title: "Achieve financial freedom", author: "Vegus", isbn: "ISBN-009",date: "13 May, 2024", imagePath: "https://img.freepik.com/premium-photo/achieve-financial-freedom-with-expert-guidance_639785-199568.jpg?w=826" },
+  { title: "Nature", author: "Alex", isbn: "ISBN-010",date: "12 Feb, 2024", imagePath: "https://img.freepik.com/free-vector/nature-flyer_23-2148020965.jpg?t=st=1728397420~exp=1728401020~hmac=59763274be56123270e5b45fd144b9595fc3c4b8e63ba9614d339fb992a59670&w=826" },
+  { title: "Science for you", author: "Merlin", isbn: "ISBN-011",date: "11 Nov, 2023", imagePath: "https://img.freepik.com/free-psd/science-festival-template-design_23-2150651055.jpg?t=st=1728396994~exp=1728400594~hmac=1f67facf18bbcd49169b56a6a223c80f080dff1a9dec9927eb4c762b22610c8f&w=826" },
+  { title: "Halloween", author: "John", isbn: "ISBN-012",date: "11 Dec, 2023", imagePath: "https://img.freepik.com/free-vector/spooky-halloween-party-poster-with-flat-design_23-2147918149.jpg?t=st=1728396952~exp=1728400552~hmac=7b30f196ca1b34f5b341683f2ebf16179b417117737b7dd35c7708132118b4b6&w=826" },
+  { title: "National day of Science", author: "Howard", isbn: "ISBN-013",date: "20 Nov, 2023", imagePath: "https://img.freepik.com/free-vector/flat-national-science-day-vertical-poster-template_23-2149259348.jpg?t=st=1728397727~exp=1728401327~hmac=664052745a2dddc21480f24e2d973ae325d833c2453179e0e43597af40351308&w=826" },
+  { title: "Halloween Warrior", author: "Mike", isbn: "ISBN-014",date: "19 Mar, 2023", imagePath: "https://img.freepik.com/free-vector/halloween-party-brochure-night-forest_23-2147570860.jpg?t=st=1728396930~exp=1728400530~hmac=13de87f07811c80a682a213be9f3d15b2f50d81894d02ace8033589fbe0c438c&w=826" },
+  { title: "Simplifying the Science", author: "Merlin", isbn: "ISBN-015",date: "09 Feb, 2023", imagePath: "https://img.freepik.com/free-psd/science-festival-template-design_23-2150651069.jpg?t=st=1728397388~exp=1728400988~hmac=c25783ec97b253b68b6ced4c84898305e1a44474854fb4d55452837c73ecceeb&w=826" },
+  { title: "Saluting our heroes", author: "John", isbn: "ISBN-016",date: "19 Oct, 2023", imagePath: "https://img.freepik.com/free-psd/veteran-s-day-celebration-poster-template_23-2150849863.jpg?t=st=1728397942~exp=1728401542~hmac=4ef90cf307d2076032931138ba942c6a8ae2eecc92a7351686e89aefacffacf7&w=826" },
+  { title: "Eternal Soldiers", author: "John", isbn: "ISBN-017",date: "24 Dec, 2023", imagePath: "https://img.freepik.com/free-vector/movie-poster-template-design_742173-20776.jpg?t=st=1728397848~exp=1728401448~hmac=d18c2cf099db213b1979903bb0a687e582ef63c2357bb03ae7fd340e478469b4&w=826" },
+  { title: "Meta Human", author: "Alex", isbn: "ISBN-018",date: "16 Aug, 2023", imagePath: "https://img.freepik.com/premium-photo/book-with-womans-face-it-that-says-human-human_1032785-15927.jpg?w=826" },
+  { title: "Cursed residence", author: "John", isbn: "ISBN-019",date: "03 Apr 2024", imagePath: "https://img.freepik.com/free-vector/realistic-horror-movie-poster-template_23-2149621949.jpg?t=st=1728398271~exp=1728401871~hmac=73cf3d3bab2d36d32c9f3a0be101faeb00739f815cf19dd96f94128cc1c297fb&w=826" },
+  { title: "Spookie night", author: "John", isbn: "ISBN-020",date: "14 Apr, 2023", imagePath: "https://img.freepik.com/free-psd/grungy-happy-halloween-poster-template_23-2149660372.jpg?t=st=1728397889~exp=1728401489~hmac=9ab2f297422e72706ab3d09bbdf78a966008910783f184fe2527ef554124fd4c&w=826" },
+  { title: "New Technology", author: "Joseph", isbn: "ISBN-021",date: "18 June, 2023", imagePath: "https://img.freepik.com/premium-vector/modern-vector-technology-flyer-template_589744-739.jpg?w=826" }
 ];
+
 
 // Function to generate a random ISBN
 function generateISBN() {
@@ -313,7 +314,9 @@ function generateAndSaveISBNs() {
   const bookIsbns = books.map(book => ({
     title: book.title,
     author: book.author,
-    isbn: generateISBN()
+    isbn: generateISBN(),
+    date: book.date,
+    imagePath: book.imagePath,
   }));
 
   // Save the generated ISBNs to the file
@@ -374,6 +377,17 @@ router.get('/books', (req, res) => {
       const isbnPlaceholder = `<p id="isbn" class="isbn">isbn here</p>`;
       const isbnHtml = `<p id="isbn" class="isbn">${book.isbn}</p>`;
       htmlContent = htmlContent.replace(isbnPlaceholder, isbnHtml);
+
+      // Optionally display the book's date
+      const datePlaceholder = `<p id="book-date">Date here</p>`;
+      const dateHtml = `<p id="book-date">Published on: ${book.date}</p>`;
+      htmlContent = htmlContent.replace(datePlaceholder, dateHtml);
+
+      // Replace the image placeholder
+      const imagePlaceholder = `<img src="image-path-here" alt="image" class="w-full transition group-hover:rotate-6 group-hover:scale-125">`;
+      const imageHtml = `<img src="${book.imagePath}" alt="image" class="w-full transition group-hover:rotate-6 group-hover:scale-125">`;
+      htmlContent = htmlContent.replace(imagePlaceholder, imageHtml);
+
     });
 
     // Send the updated HTML content
@@ -384,7 +398,6 @@ router.get('/books', (req, res) => {
     res.status(500).send('An error occurred while processing the books page.');
   }
 });
-
 
 
 router.get('/search', (req, res) => {
