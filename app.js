@@ -13,7 +13,7 @@ const app = express();
 app.use(session({
     secret: '4f6e5d6f51f93e0a9b7a2bc17e4b6f19e2f08a8d8ef3a6c6f3f7e2e7f6a8b9c4',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false }  // Set to true if using HTTPS
 }));
 

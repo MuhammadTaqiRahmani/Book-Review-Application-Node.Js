@@ -145,6 +145,24 @@ router.post('/signup', (req, res) => {
   connection.execSql(checkRequest);
 });
 
+function checkUserProfileExists(userId, callback) {
+  const request = new sql.Request();
+  const query = `SELECT COUNT(*) AS count FROM Profiles WHERE userId = @userId`;
+  request.input('userId', sql.Int, userId);
+  
+  request.query(query, (err, result) => {
+      if (err) {
+          console.error('Error checking profile existence:', err);
+          callback(err, null);
+          return;
+      }
+
+      const profileExists = result.recordset[0].count > 0;
+      callback(null, profileExists);
+  });
+}
+
+
 router.post('/signin', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -189,136 +207,140 @@ router.post('/signin', (req, res) => {
     });
   });
 
-// In your signin route after user signs in
-loginRequest.on('requestCompleted', () => {
-  if (storedHashedPassword) {
-    const hashedPassword = hashPassword(password);
-    if (hashedPassword === storedHashedPassword) {
-      console.log('Signin successful');
-      req.session.userId = userId;  // Ensure session is set
-
-
-      req.session.save((err) => {
-        if (err) {
-            console.error('Error saving session:', err);
+  loginRequest.on('requestCompleted', () => {
+    if (storedHashedPassword) {
+      const hashedPassword = hashPassword(password);
+      if (hashedPassword === storedHashedPassword) {
+        console.log('Signin successful');
+        req.session.userId = userId;  // Store user ID in the session
+        
+        // Call the function to check if the profile exists
+        checkUserProfileExists(userId, (err, profileExists) => {
+          if (err) {
             return res.status(500).send('Server error. Please try again later.');
-        }
-
-        // After successfully saving session, run checkProfileQuery
-        const checkProfileQuery = `SELECT COUNT(*) AS count FROM Profiles WHERE id = '${userId}'`;
-        const checkProfileRequest = new Request(checkProfileQuery, (err, rowCount) => {
-            if (err) {
-                console.error('Error checking profile existence:', err);
-                return res.status(500).send('Server error. Please try again later.');
-            }
+          }
+          
+          // Redirect based on profile existence
+          if (profileExists) {
+            return res.redirect('/books'); // Redirect to /books if profile exists
+          } else {
+            return res.redirect('/profile'); // Redirect to /profile if profile doesn't exist
+          }
         });
-
-        let profileExists = false;
-
-        checkProfileRequest.on('row', columns => {
-            columns.forEach(column => {
-                if (column.metadata.colName === 'count' && column.value > 0) {
-                    profileExists = true;
-                }
-            });
-        });
-
-        checkProfileRequest.on('requestCompleted', () => {
-            console.log(`Profile existence: ${profileExists}`);
-            
-            if (profileExists) {
-                console.log('Profile exists, redirecting to /books');
-                return res.redirect('/books');  // Redirect to books page
-            } else {
-                console.log('No profile found, redirecting to /profile');
-                return res.redirect('/profile');  // Redirect to profile creation
-            }
-        });
-
-        connection.execSql(checkProfileRequest);
-    });
-    
-
-    } else {
-      console.log('Password mismatch');
-      return res.status(400).send('Invalid email or password');
+        
+      } else {
+        console.log('Password mismatch');
+        return res.status(400).send('Invalid email or password');
+      }
     }
-  }
-});
+  });
+
   connection.execSql(loginRequest);
 });
 
 
-
-router.post('/profile', (req, res) => {
-  const { fullName, dob, country, city, address, phoneNo, bio } = req.body;
-  const userId = req.session.userId;
-
-  if (!userId) {
-    return res.status(400).send({ success: false, message: 'User not signed in.' });
-  }
-
-  // Check if the user already has a profile
-  const checkProfileQuery = `SELECT COUNT(*) AS count FROM Profiles WHERE id = '${userId}'`;
-
-  const checkRequest = new Request(checkProfileQuery, (err) => {
-    if (err) {
-      console.error('Error checking profile existence:', err);
-      return res.status(500).send({ success: false, message: 'Server error. Please try again later.' });
-    }
-  });
-
-  let profileExists = false;
-
-  checkRequest.on('row', columns => {
-    columns.forEach(column => {
-      if (column.metadata.colName === 'count' && column.value > 0) {
-        profileExists = true;
+function checkProfileExists(userId) {
+  return new Promise((resolve, reject) => {
+    const checkProfileQuery = `SELECT COUNT(*) AS count FROM Profiles WHERE id = @userId`;
+    const request = new Request(checkProfileQuery, (err) => {
+      if (err) {
+        return reject(err);
       }
     });
+
+    request.addParameter('userId', TYPES.NVarChar, userId);
+
+    let profileExists = false;
+    request.on('row', columns => {
+      profileExists = columns[0].value > 0;
+    });
+
+    request.on('requestCompleted', () => resolve(profileExists));
+
+    connection.execSql(request);
   });
+}
 
-  checkRequest.on('requestCompleted', () => {
-    if (profileExists) {
-      // Update profile
-      const updateProfileQuery = `
-        UPDATE Profiles 
-        SET fullName = '${fullName}', dob = '${dob}', country = '${country}', city = '${city}', 
-            address = '${address}', phoneNo = '${phoneNo}', bio = '${bio}'
-        WHERE id = '${userId}'
-      `;
-      const updateRequest = new Request(updateProfileQuery, (err) => {
-        if (err) {
-          console.error('Error updating profile data:', err);
-          return res.status(500).send({ success: false, message: 'Error updating profile data.' });
-        } else {
-          console.log('Profile updated successfully.');
-          return res.redirect('/books');  // Redirect to /books after profile update
-        }
-      });
-      connection.execSql(updateRequest);
+function updateProfile(userId, profileData) {
+  return new Promise((resolve, reject) => {
+    const updateQuery = `
+      UPDATE Profiles SET
+      fullName = @fullName, dob = @dob, country = @country, city = @city,
+      address = @address, phoneNo = @phoneNo, bio = @bio
+      WHERE id = @userId
+    `;
 
-    } else {
-      // Insert profile
-      const insertProfileQuery = `
-        INSERT INTO Profiles (id, fullName, dob, country, city, address, phoneNo, bio)
-        VALUES ('${userId}', '${fullName}', '${dob}', '${country}', '${city}', '${address}', '${phoneNo}', '${bio}')
-      `;
-      const insertRequest = new Request(insertProfileQuery, (err) => {
-        if (err) {
-          console.error('Error inserting profile data:', err);
-          return res.status(500).send({ success: false, message: 'Error saving profile data.' });
-        } else {
-          console.log('Profile saved successfully.');
-          return res.redirect('/books');  // Redirect to /books after profile creation
-        }
-      });
-      connection.execSql(insertRequest);
+    const request = new Request(updateQuery, (err) => {
+      if (err) return reject(err);
+      resolve();
+    });
+
+    request.addParameter('fullName', TYPES.NVarChar, profileData.fullName);
+    request.addParameter('dob', TYPES.NVarChar, profileData.dob);
+    request.addParameter('country', TYPES.NVarChar, profileData.country);
+    request.addParameter('city', TYPES.NVarChar, profileData.city);
+    request.addParameter('address', TYPES.NVarChar, profileData.address);
+    request.addParameter('phoneNo', TYPES.NVarChar, profileData.phoneNo);
+    request.addParameter('bio', TYPES.NVarChar, profileData.bio);
+    request.addParameter('userId', TYPES.NVarChar, userId);
+
+    connection.execSql(request);
+  });
+}
+
+function insertProfile(userId, profileData) {
+  return new Promise((resolve, reject) => {
+    const insertQuery = `
+      INSERT INTO Profiles (id, fullName, dob, country, city, address, phoneNo, bio)
+      VALUES (@userId, @fullName, @dob, @country, @city, @address, @phoneNo, @bio)
+    `;
+
+    const request = new Request(insertQuery, (err) => {
+      if (err) return reject(err);
+      resolve();
+    });
+
+    request.addParameter('fullName', TYPES.NVarChar, profileData.fullName);
+    request.addParameter('dob', TYPES.NVarChar, profileData.dob);
+    request.addParameter('country', TYPES.NVarChar, profileData.country);
+    request.addParameter('city', TYPES.NVarChar, profileData.city);
+    request.addParameter('address', TYPES.NVarChar, profileData.address);
+    request.addParameter('phoneNo', TYPES.NVarChar, profileData.phoneNo);
+    request.addParameter('bio', TYPES.NVarChar, profileData.bio);
+    request.addParameter('userId', TYPES.NVarChar, userId);
+
+    connection.execSql(request);
+  });
+}
+
+router.post('/profile', async (req, res) => {
+  try {
+    const { fullName, dob, country, city, address, phoneNo, bio } = req.body;
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(400).send({ success: false, message: 'User not signed in.' });
     }
-  });
 
-  connection.execSql(checkRequest);
+    const profileExists = await checkProfileExists(userId);
+
+    if (profileExists) {
+      await updateProfile(userId, { fullName, dob, country, city, address, phoneNo, bio });
+      console.log('Profile updated successfully.');
+    } else {
+      await insertProfile(userId, { fullName, dob, country, city, address, phoneNo, bio });
+      console.log('Profile saved successfully.');
+    }
+
+    return res.redirect('/books');
+
+  } catch (err) {
+    console.error('Error saving/updating profile data:', err);
+    return res.status(500).send({ success: false, message: 'Server error. Please try again later.' });
+  }
 });
+
+
 
 const isbnFilePath = path.join(__dirname, 'isbn.json');
 
