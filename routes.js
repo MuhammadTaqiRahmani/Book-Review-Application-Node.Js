@@ -320,6 +320,15 @@ router.post('/profile', (req, res) => {
   connection.execSql(checkRequest);
 });
 
+
+router.get('/profile/:userId', (req, res) => {
+  const userId = req.params.userId;
+
+  // Render the profileid.html page
+  res.render('profileid', { userId });
+});
+
+
 const isbnFilePath = path.join(__dirname, 'isbn.json');
 
 // List of books with their titles and authors
